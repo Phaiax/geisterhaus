@@ -12,7 +12,7 @@ class SimpleGame {
 
     game: Phaser.Game;
     bmd: Phaser.BitmapData;
-    sprite: Phaser.Sprite;
+    ship: Phaser.Sprite;
     text: Phaser.Text;
 
     preload() {
@@ -36,11 +36,13 @@ class SimpleGame {
         this.game.physics.p2.gravity.y = 100;
         this.game.physics.p2.restitution = 0.8;
 
-        this.sprite = this.game.add.sprite(32, 450, 'arrow');
+        this.ship = this.game.add.sprite(32, 450, 'arrow');
 
-        this.game.physics.p2.enable(this.sprite);
+        this.ship.scale = new Phaser.Point(0.6,0.6);
 
-        this.sprite.body.fixedRotation = true;
+        this.game.physics.p2.enable(this.ship);
+
+        this.ship.body.fixedRotation = true;
 
         this.text = this.game.add.text(20, 20, 'click to the left / right of the ship', { fill: '#ffffff', font: '14pt Arial' });
 
@@ -59,15 +61,15 @@ class SimpleGame {
     }
 
     launch() {
-        if (this.game.input.x < this.sprite.x)
+        if (this.game.input.x < this.ship.x)
         {
-            this.sprite.body.velocity.x = -200;
-            this.sprite.body.velocity.y = -200;
+            this.ship.body.velocity.x = -200;
+            this.ship.body.velocity.y = -200;
         }
         else
         {
-            this.sprite.body.velocity.x = 200;
-            this.sprite.body.velocity.y = -200;
+            this.ship.body.velocity.x = 200;
+            this.ship.body.velocity.y = -200;
         }
     }
 

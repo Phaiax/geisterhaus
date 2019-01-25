@@ -1,5 +1,6 @@
 {
     "files": [
-      "phaser/typescript/phaser.d.ts"
+      "phaser/typescript/phaser.d.ts",
+      "app.ts"
     ]
   }
