@@ -3,7 +3,7 @@
 class SimpleGame {
 
     constructor() {
-        this.game = new Phaser.Game(800, 600, Phaser.CANVAS, 'content', { 
+        this.game = new Phaser.Game(480, 270, Phaser.CANVAS, 'content', { 
             preload: this.preload,
             create: this.create,
             update: this.update,
@@ -20,6 +20,9 @@ class SimpleGame {
     }
 
     create() {
+        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+
         var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
         logo.anchor.setTo(0.5, 0.5);
 
@@ -48,6 +51,7 @@ class SimpleGame {
 
         this.game.input.onDown.add(SimpleGame.prototype.launch, this);
 
+        this.gofull();
 
 
     }
@@ -73,6 +77,18 @@ class SimpleGame {
         }
     }
 
+    gofull() {
+
+        //if (this.game.scale.isFullScreen)
+        //{
+            // this.game.scale.stopFullScreen();
+        // }
+        // else
+        // {
+            this.game.scale.startFullScreen(false);
+        // }
+    
+    }
 }
 
 window.onload = () => {
