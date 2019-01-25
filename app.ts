@@ -4,10 +4,11 @@ class SimpleGame {
 
     constructor() {
         this.game = new Phaser.Game(480, 270, Phaser.CANVAS, 'content', { 
-            preload: this.preload,
-            create: this.create,
-            update: this.update,
-            render: this.render  });
+            preload: () => { this.preload() },
+            create: () => { this.create() },
+            update: () => { this.update() },
+            render: () => { this.render() }  });
+        
     }
 
     game: Phaser.Game;
@@ -18,6 +19,7 @@ class SimpleGame {
     preload() {
         this.game.load.image('arrow', 'assets/ship.png');
     }
+
 
     create() {
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -89,6 +91,7 @@ class SimpleGame {
         // }
     
     }
+
 }
 
 window.onload = () => {

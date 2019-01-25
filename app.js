@@ -1,11 +1,12 @@
 /// <reference path="phaser/typescript/phaser.d.ts"/>
 var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
+        var _this = this;
         this.game = new Phaser.Game(480, 270, Phaser.CANVAS, 'content', {
-            preload: this.preload,
-            create: this.create,
-            update: this.update,
-            render: this.render
+            preload: function () { _this.preload(); },
+            create: function () { _this.create(); },
+            update: function () { _this.update(); },
+            render: function () { _this.render(); }
         });
     }
     SimpleGame.prototype.preload = function () {
