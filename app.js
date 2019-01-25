@@ -30,7 +30,7 @@ var SimpleGame = /** @class */ (function () {
         this.ship.body.fixedRotation = true;
         this.text = this.game.add.text(20, 20, 'click to the left / right of the ship', { fill: '#ffffff', font: '14pt Arial' });
         this.game.input.onDown.add(SimpleGame.prototype.launch, this);
-        this.gofull();
+        this.game.input.onDown.add(SimpleGame.prototype.gofull, this);
     };
     SimpleGame.prototype.update = function () {
     };
@@ -47,14 +47,12 @@ var SimpleGame = /** @class */ (function () {
         }
     };
     SimpleGame.prototype.gofull = function () {
-        //if (this.game.scale.isFullScreen)
-        //{
-        // this.game.scale.stopFullScreen();
-        // }
-        // else
-        // {
-        this.game.scale.startFullScreen(false);
-        // }
+        if (this.game.scale.isFullScreen) {
+            // this.game.scale.stopFullScreen();
+        }
+        else {
+            this.game.scale.startFullScreen(false);
+        }
     };
     return SimpleGame;
 }());

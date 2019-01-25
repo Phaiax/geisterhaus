@@ -52,8 +52,9 @@ class SimpleGame {
         this.text = this.game.add.text(20, 20, 'click to the left / right of the ship', { fill: '#ffffff', font: '14pt Arial' });
 
         this.game.input.onDown.add(SimpleGame.prototype.launch, this);
+        this.game.input.onDown.add(SimpleGame.prototype.gofull, this);
 
-        this.gofull();
+        
 
 
     }
@@ -81,14 +82,14 @@ class SimpleGame {
 
     gofull() {
 
-        //if (this.game.scale.isFullScreen)
-        //{
+        if (this.game.scale.isFullScreen)
+        {
             // this.game.scale.stopFullScreen();
-        // }
-        // else
-        // {
+        }
+        else
+        {
             this.game.scale.startFullScreen(false);
-        // }
+        }
     
     }
 
