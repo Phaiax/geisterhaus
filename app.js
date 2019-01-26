@@ -137,6 +137,9 @@ var SimpleGame = /** @class */ (function () {
         this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
         this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 93 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65 });
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.kaffeedowntween = this.game.add.tween(this.kaffee).to({ x: 200, y: 125 }, 300, Phaser.Easing.Exponential.In);
+        this.kaffeeerasetween = this.game.add.tween(this.kaffee).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
+        this.kaffeedowntween.chain(this.kaffeeerasetween);
     };
     SimpleGame.prototype.update = function () {
         if (!this.gameover) {
@@ -195,7 +198,7 @@ var SimpleGame = /** @class */ (function () {
         }
     };
     SimpleGame.prototype.checkWinLose = function () {
-        if (this.picHasFallen == true) {
+        if (this.picHasFallen == true && this.kaffeehasfallen == true) {
             this.winlosetxt.text = "WIN!";
             this.gameover = true;
         }
@@ -220,6 +223,10 @@ var SimpleGame = /** @class */ (function () {
                     _this.picturedowntween.start();
                 }, this);
             }
+        }
+        if (!this.isDay && this.day >= 1) {
+            this.kaffeedowntween.start();
+            this.kaffeehasfallen = true;
         }
     };
     SimpleGame.prototype.toggle_fullscreen = function () {

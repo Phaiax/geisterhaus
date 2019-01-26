@@ -39,6 +39,7 @@ class SimpleGame {
     ghost: Phaser.Sprite;
     grl: Phaser.Sprite;
     gameover: boolean;
+    kaffeehasfallen: boolean;
 
     grlCarryBild: Phaser.Tween;
     bildWirdgehaengt: Phaser.Tween;
@@ -51,6 +52,8 @@ class SimpleGame {
     kaffeestellen: Phaser.Tween;
     kaffeeFallen: Phaser.Tween;
     kaffeeFallenSterben: Phaser.Tween;
+    kaffeedowntween : Phaser.Tween;
+    kaffeeerasetween: Phaser.Tween;
 
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
@@ -209,6 +212,10 @@ class SimpleGame {
         this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
         this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 93 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65 });
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+
+        this.kaffeedowntween = this.game.add.tween(this.kaffee).to({x:200, y: 125 }, 300, Phaser.Easing.Exponential.In);
+        this.kaffeeerasetween = this.game.add.tween(this.kaffee).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
+        this.kaffeedowntween.chain(this.kaffeeerasetween);
     }
 
     day: number = 1;
@@ -274,7 +281,7 @@ class SimpleGame {
     }
 
     checkWinLose() {
-        if (this.picHasFallen == true) {
+        if (this.picHasFallen == true && this.kaffeehasfallen == true) {
             this.winlosetxt.text = "WIN!";
             this.gameover = true;
         }
@@ -306,6 +313,10 @@ class SimpleGame {
                 }, this);
             }
         }
+        if (!this.isDay && this.day >= 1) {
+            this.kaffeedowntween.start();
+            this.kaffeehasfallen = true;
+        }    
     }
 
     toggle_fullscreen() {
