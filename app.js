@@ -23,6 +23,7 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.image('foreground', 'assets/foreground.png');
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
+        this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
     };
@@ -40,10 +41,17 @@ var SimpleGame = /** @class */ (function () {
         this.picture.scale = new Phaser.Point(1, 1);
         this.picturedowntween = this.game.add.tween(this.picture).to({ y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
-        // Background
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
         foreground.z = 0;
+        this.ghost = this.game.add.sprite(30, 30, 'ghost');
+        this.ghost.anchor = new Phaser.Point(1, 1);
+        this.ghost.scale = new Phaser.Point(1, 1);
+        this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenR.chain(this.ghostTweenL);
+        this.ghostTweenR.start();
+        this.ghost.z = 1;
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         var fullscreen_button = this.game.add.button(this.game.world.width - 5, 5, 'fullscreen', function () {
@@ -78,14 +86,18 @@ var SimpleGame = /** @class */ (function () {
             this.beginTag();
         else
             this.beginN8();
+        if (this.ghost.position.x < 31)
+            this.ghostTweenR.start();
     };
     SimpleGame.prototype.beginTag = function () {
         this.tag.visible = true;
         this.n8.visible = false;
+        this.ghost.visible = false;
     };
     SimpleGame.prototype.beginN8 = function () {
         this.tag.visible = false;
         this.n8.visible = true;
+        this.ghost.visible = true;
     };
     SimpleGame.prototype.render = function () {
     };
