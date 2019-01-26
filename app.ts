@@ -12,6 +12,7 @@ class SimpleGame {
     }
 
     game: Phaser.Game;
+    fx: Phaser.Sound;
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
     picturedowntween: Phaser.Tween;
@@ -30,11 +31,17 @@ class SimpleGame {
         this.game.load.image('n8', 'assets/n8BG.png');
         this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
-
+        this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
     }
 
 
     create() {
+
+
+        this.fx = this.game.add.audio('sound_pic_faellt');
+
+
+
 
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
@@ -124,9 +131,15 @@ class SimpleGame {
 
     }
 
+    picHasFallen : boolean;
+
     tap() {
-        if (this.game.input.x < this.picture.x) {
-            this.picturedowntween.start();
+        if (!this.picHasFallen && this.game.input.x < this.picture.x) {
+            this.picHasFallen = true;
+            this.fx.play();
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
+                this.picturedowntween.start();
+            }, this);
         }
     }
 
