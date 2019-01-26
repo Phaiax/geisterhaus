@@ -13,6 +13,7 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
         this.game.load.image('framedpicture', 'assets/ship.png');
         this.game.load.image('foreground', 'assets/foreground.png');
+        this.game.load.image('grl', 'assets/grl.png');
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
         this.game.load.image('ghost', 'assets/ghost.png');
@@ -44,6 +45,9 @@ var SimpleGame = /** @class */ (function () {
         this.ghostTweenR.chain(this.ghostTweenL);
         this.ghostTweenR.start();
         this.ghost.z = 1;
+        this.grl = this.game.add.sprite(100, 122, 'grl');
+        this.grl.anchor = new Phaser.Point(1, 1);
+        this.grl.scale = new Phaser.Point(1, 1);
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         var fullscreen_button = this.game.add.button(this.game.world.width - 5, 5, 'fullscreen', function () {
