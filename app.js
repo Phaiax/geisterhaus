@@ -29,6 +29,7 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.image('n8', 'assets/n8BG.png');
         this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
+        this.game.load.bitmapFont('pixelfont2', 'assets/carrier_command2.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
         this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
         this.game.load.audio('sound_knock', 'assets/sound/knock.mp3');
@@ -111,31 +112,34 @@ var SimpleGame = /** @class */ (function () {
         //this.time = this.game.add.text(3, 3, "");
         //this.time.scale = new Phaser.Point(0.3, 0.3);
         this.time = this.game.add.bitmapText(3, 3, 'pixelfont', 'Drag me around !', 7);
+        this.winlosetxt = this.game.add.bitmapText(60, 65, 'pixelfont2', '', 30);
         this.game.input.onDown.add(SimpleGame.prototype.tap, this);
         //this.beginTag();
     };
     SimpleGame.prototype.update = function () {
-        var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
-        var minutes = Math.floor((hours % 1) * 60);
-        this.day = Math.floor((hours - 8) / 24) + 1;
-        hours = Math.floor(hours % 24);
-        var hours_0 = "";
-        var minutes_0 = "";
-        if (hours < 10) {
-            hours_0 = "0";
-        }
-        if (minutes < 10) {
-            minutes_0 = "0";
-        }
-        this.time.text = "Tag " + this.day + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
-        if (hours >= 8 && hours <= 20)
-            this.beginTag();
-        else
-            this.beginN8();
-        if (this.ghost.position.x < 31)
-            this.ghostTweenR.start();
-        if (this.day == 1 && hours == 13) {
-            this.tag1Bildhaengen();
+        if (!this.gameover) {
+            var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
+            var minutes = Math.floor((hours % 1) * 60);
+            this.day = Math.floor((hours - 8) / 24) + 1;
+            hours = Math.floor(hours % 24);
+            var hours_0 = "";
+            var minutes_0 = "";
+            if (hours < 10) {
+                hours_0 = "0";
+            }
+            if (minutes < 10) {
+                minutes_0 = "0";
+            }
+            this.time.text = "Tag " + this.day + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
+            if (hours >= 8 && hours <= 20)
+                this.beginTag();
+            else
+                this.beginN8();
+            if (this.ghost.position.x < 31)
+                this.ghostTweenR.start();
+            if (this.day == 1 && hours == 13) {
+                this.tag1Bildhaengen();
+            }
         }
     };
     SimpleGame.prototype.beginTag = function () {
@@ -148,6 +152,8 @@ var SimpleGame = /** @class */ (function () {
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
             this.grl.position = new Phaser.Point(206 + 10, 122);
             this.grl.visible = true;
+            if (this.day == 2)
+                this.checkWinLose();
         }
     };
     SimpleGame.prototype.beginN8 = function () {
@@ -160,6 +166,16 @@ var SimpleGame = /** @class */ (function () {
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
             this.grl.position = new Phaser.Point(206 + 10, 122);
             this.grl.visible = false;
+        }
+    };
+    SimpleGame.prototype.checkWinLose = function () {
+        if (this.picHasFallen == true) {
+            this.winlosetxt.text = "WIN!";
+            this.gameover = true;
+        }
+        else {
+            this.winlosetxt.text = "LOSE!";
+            this.gameover = true;
         }
     };
     SimpleGame.prototype.render = function () {
