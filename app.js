@@ -2,6 +2,7 @@
 var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
         var _this = this;
+        this.day = 1;
         var config = {
             width: 240,
             height: 135,
@@ -27,6 +28,7 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
+        this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
     };
     SimpleGame.prototype.tag1Bildhaengen = function () {
         // position girl in the beginning to the door
@@ -42,6 +44,18 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.create = function () {
         var _this = this;
+        this.fx = this.game.add.audio('sound_pic_faellt');
+        this.fxgutenmorgen = this.game.add.audio('sound_morgen_nacht');
+        this.fxgutenmorgen.addMarker('morgen1', 0.046, 0.871);
+        this.fxgutenmorgen.addMarker('morgen2', 1.126, 0.894);
+        this.fxgutenmorgen.addMarker('morgen3', 2.218, 0.580);
+        this.fxgutenmorgen.addMarker('morgen4', 2.926, 1.382);
+        this.fxgutenmorgen.addMarker('nacht1', 4.540, 0.848);
+        this.fxgutenmorgen.addMarker('nacht2', 5.303, 0.720);
+        this.fxgutenmorgen.addMarker('nacht3', 6.455, 0.940);
+        this.fxgutenmorgen.addMarker('nacht4', 7.588, 0.789);
+        this.fxgutenmorgen.addMarker('nacht5', 8.382, 1.045);
+        this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
         this.fx = this.game.add.audio('sound_pic_faellt');
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
@@ -86,9 +100,9 @@ var SimpleGame = /** @class */ (function () {
         this.beginTag();
     };
     SimpleGame.prototype.update = function () {
-        var hours = this.game.time.totalElapsedSeconds() / 1;
+        var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
         var minutes = Math.floor((hours % 1) * 60);
-        var days = Math.floor(hours / 24);
+        this.day = Math.floor(hours / 24) + 1;
         hours = Math.floor(hours % 24);
         var hours_0 = "";
         var minutes_0 = "";
@@ -98,7 +112,7 @@ var SimpleGame = /** @class */ (function () {
         if (minutes < 10) {
             minutes_0 = "0";
         }
-        this.time.text = "Tag " + days + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
+        this.time.text = "Tag " + this.day + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
         if (hours >= 8 && hours <= 20)
             this.beginTag();
         else
@@ -107,20 +121,30 @@ var SimpleGame = /** @class */ (function () {
             this.ghostTweenR.start();
     };
     SimpleGame.prototype.beginTag = function () {
-        this.tag.visible = true;
-        this.n8.visible = false;
-        this.ghost.visible = false;
+        if (!this.isDay) {
+            this.isDay = true;
+            this.tag.visible = true;
+            this.n8.visible = false;
+            this.ghost.visible = false;
+            var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4'];
+            this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
+        }
     };
     SimpleGame.prototype.beginN8 = function () {
-        this.tag.visible = false;
-        this.n8.visible = true;
-        this.ghost.visible = true;
+        if (this.isDay) {
+            this.isDay = false;
+            this.tag.visible = false;
+            this.n8.visible = true;
+            this.ghost.visible = true;
+            var nachtsounds = ['nacht1', 'nacht2', 'nacht3', 'nacht4', 'nacht5', 'nacht6'];
+            this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
+        }
     };
     SimpleGame.prototype.render = function () {
     };
     SimpleGame.prototype.tap = function () {
         var _this = this;
-        if (!this.picHasFallen && this.game.input.x < this.picture.x) {
+        if (!this.isDay && !this.picHasFallen && this.game.input.x < this.picture.x) {
             this.picHasFallen = true;
             this.fx.play();
             this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {

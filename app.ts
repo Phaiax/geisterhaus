@@ -22,6 +22,7 @@ class SimpleGame {
 
     game: Phaser.Game;
     fx: Phaser.Sound;
+    fxgutenmorgen: Phaser.Sound;
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
     picturedowntween: Phaser.Tween;
@@ -46,6 +47,7 @@ class SimpleGame {
         this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
+        this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
     }
 
     tag1Bildhaengen()
@@ -66,6 +68,18 @@ class SimpleGame {
     }
 
     create() {
+        this.fx = this.game.add.audio('sound_pic_faellt');
+        this.fxgutenmorgen = this.game.add.audio('sound_morgen_nacht');
+        this.fxgutenmorgen.addMarker('morgen1', 0.046, 0.871);
+        this.fxgutenmorgen.addMarker('morgen2', 1.126, 0.894);
+        this.fxgutenmorgen.addMarker('morgen3', 2.218, 0.580);
+        this.fxgutenmorgen.addMarker('morgen4', 2.926, 1.382);
+        this.fxgutenmorgen.addMarker('nacht1', 4.540, 0.848);
+        this.fxgutenmorgen.addMarker('nacht2', 5.303, 0.720);
+        this.fxgutenmorgen.addMarker('nacht3', 6.455, 0.940);
+        this.fxgutenmorgen.addMarker('nacht4', 7.588, 0.789);
+        this.fxgutenmorgen.addMarker('nacht5', 8.382, 1.045);
+        this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
 
 
         this.fx = this.game.add.audio('sound_pic_faellt');
@@ -129,16 +143,18 @@ class SimpleGame {
         this.beginTag();
     }
 
+    day : number = 1;
+
     update() {
-        var hours = this.game.time.totalElapsedSeconds() / 1;
+        var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
         var minutes = Math.floor((hours % 1) * 60);
-        var days = Math.floor(hours / 24);
+        this.day = Math.floor(hours / 24) + 1;
         hours = Math.floor(hours % 24);
         var hours_0 = "";
         var minutes_0 = "";
         if (hours < 10) { hours_0 = "0"; }
-            if (minutes < 10) { minutes_0 = "0"; }
-                this.time.text = "Tag " + days + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
+        if (minutes < 10) { minutes_0 = "0"; }
+        this.time.text = "Tag " + this.day + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
         if (hours >= 8 && hours <= 20)
             this.beginTag();
         else
@@ -148,18 +164,30 @@ class SimpleGame {
         
     }
 
+    isDay:boolean;
+
     beginTag()
     {
-        this.tag.visible = true;
-        this.n8.visible = false;
-        this.ghost.visible = false;
+        if (!this.isDay) {
+            this.isDay = true;
+            this.tag.visible = true;
+            this.n8.visible = false;
+            this.ghost.visible = false;
+            var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4']
+            this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
+        }
     }
 
     beginN8()
     {
-        this.tag.visible = false;
-        this.n8.visible = true;
-        this.ghost.visible = true;
+        if (this.isDay) {
+            this.isDay = false;
+            this.tag.visible = false;
+            this.n8.visible = true;
+            this.ghost.visible = true;
+            var nachtsounds = ['nacht1', 'nacht2', 'nacht3', 'nacht4', 'nacht5', 'nacht6']
+            this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
+        }
     }
 
     render() {
@@ -169,7 +197,7 @@ class SimpleGame {
     picHasFallen : boolean;
 
     tap() {
-        if (!this.picHasFallen && this.game.input.x < this.picture.x) {
+        if (!this.isDay && !this.picHasFallen && this.game.input.x < this.picture.x) {
             this.picHasFallen = true;
             this.fx.play();
             this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
