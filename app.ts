@@ -27,6 +27,7 @@ class SimpleGame {
     fxaufhaengen: Phaser.Sound;
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
+    kaffee: Phaser.Sprite;
     picturedowntween: Phaser.Tween;
     pictureerasetween: Phaser.Tween;
     ghostTweenR: Phaser.Tween;
@@ -44,6 +45,13 @@ class SimpleGame {
     bildWirdgehaengt2: Phaser.Tween;
     bildWirdgehaengt3: Phaser.Tween;
 
+
+    grlCarryKaffee: Phaser.Tween;
+    kaffeebewegung: Phaser.Tween;
+    kaffeestellen: Phaser.Tween;
+    kaffeeFallen: Phaser.Tween;
+    kaffeeFallenSterben: Phaser.Tween;
+
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
         this.game.load.image('framedpicture', 'assets/ship.png');
@@ -51,6 +59,7 @@ class SimpleGame {
         this.game.load.image('grl', 'assets/grl.png');
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
+        this.game.load.image('kaffee', 'assets/kaffee.png');
         this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.bitmapFont('pixelfont2', 'assets/carrier_command2.png', 'assets/carrier_command.xml');
@@ -58,6 +67,7 @@ class SimpleGame {
         this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
         this.game.load.audio('sound_knock', 'assets/sound/knock.mp3');
         this.game.load.audio('sound_aufhaengen', 'assets/sound/bildaufhaengen.mp3');
+
     }
 
     tag1Bildhaengen()
@@ -77,6 +87,30 @@ class SimpleGame {
         this.bildWirdgehaengt2.chain(this.bildWirdgehaengt3);
         this.grlCarryBild.start();
         this.bildWirdgehaengt.start();
+
+        //after. position bild on correct position
+        
+        // play sound?
+        this.fxaufhaengen.play();
+    }
+
+    tag2KaffeemachineStellen()
+    {
+        this.kaffee.position = new Phaser.Point(200+20, 110);
+        this.grl.position = new Phaser.Point(206+10, 122);
+        this.kaffee.visible = true;
+        this.grl.visible = true;
+
+        // let her with the bild walk to the bild haeng position
+
+        this.grlCarryKaffee= this.game.add.tween(this.grl).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.kaffeebewegung= this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut,false,10,0,false);
+        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 95 }, 1500, Phaser.Easing.Quadratic.InOut,false,2,0,false);
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.kaffeebewegung.chain(this.kaffeestellen);
+        this.kaffeestellen.chain(this.bildWirdgehaengt3);
+        this.grlCarryKaffee.start();
+        this.kaffeebewegung.start();
 
         //after. position bild on correct position
         
@@ -128,6 +162,13 @@ class SimpleGame {
         this.picturedowntween.chain(this.pictureerasetween);
         this.picture.z = 1;
         this.picture.visible = false;
+
+        this.kaffee = this.game.add.sprite(90, 100, 'kaffee');
+        this.kaffee.anchor = new Phaser.Point(1, 1);
+        this.kaffee.scale = new Phaser.Point(1,1);
+        this.kaffee.visible = false;
+
+        
 
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
@@ -189,10 +230,16 @@ class SimpleGame {
             if (this.ghost.position.x < 31)
                 this.ghostTweenR.start(); 
             
-            if(this.day == 1 && hours == 13)
+                if(this.day == 1 && hours == 13)
+                {
+                    //this.tag1Bildhaengen();
+                    this.tag2KaffeemachineStellen();
+            }  
+            if(this.day == 2 && hours == 13)
             {
                 this.tag1Bildhaengen();
-            }   
+
+            }  
         }    
     }
 
@@ -209,7 +256,7 @@ class SimpleGame {
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
             this.grl.position = new Phaser.Point(206+10, 122);
             this.grl.visible = true;
-            if(this.day == 2)
+            if(this.day == 3)
                 this.checkWinLose();
   
         }
