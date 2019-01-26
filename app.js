@@ -36,11 +36,17 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.tag1Bildhaengen = function () {
         // position girl in the beginning to the door
-        this.picture.position = new Phaser.Point(208, 122);
-        this.grl.position = new Phaser.Point(208, 122);
+        this.picture.position = new Phaser.Point(200 + 20, 130);
+        this.grl.position = new Phaser.Point(206 + 10, 122);
+        this.picture.visible = true;
+        this.grl.visible = true;
         // let her with the bild walk to the bild haeng position
-        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.bildWirdgehaengt.chain(this.bildWirdgehaengt2);
+        this.bildWirdgehaengt2.chain(this.bildWirdgehaengt3);
         this.grlCarryBild.start();
         this.bildWirdgehaengt.start();
         //after. position bild on correct position
@@ -69,6 +75,10 @@ var SimpleGame = /** @class */ (function () {
         this.n8 = this.game.add.sprite(0, 0, 'n8');
         this.tag.z = 6;
         this.tag.visible = false;
+        this.grl = this.game.add.sprite(100, 122, 'grl');
+        this.grl.anchor = new Phaser.Point(1, 1);
+        this.grl.scale = new Phaser.Point(1, 1);
+        this.grl.visible = false;
         this.picture = this.game.add.sprite(90, 100, 'framedpicture');
         this.picture.anchor = new Phaser.Point(1, 1);
         this.picture.scale = new Phaser.Point(1, 1);
@@ -86,9 +96,6 @@ var SimpleGame = /** @class */ (function () {
         this.ghostTweenR.chain(this.ghostTweenL);
         this.ghostTweenR.start();
         this.ghost.z = 1;
-        this.grl = this.game.add.sprite(100, 122, 'grl');
-        this.grl.anchor = new Phaser.Point(1, 1);
-        this.grl.scale = new Phaser.Point(1, 1);
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         var fullscreen_button = this.game.add.button(this.game.world.width - 5, 5, 'fullscreen', function () {
@@ -103,7 +110,7 @@ var SimpleGame = /** @class */ (function () {
         //this.time.scale = new Phaser.Point(0.3, 0.3);
         this.time = this.game.add.bitmapText(3, 3, 'pixelfont', 'Drag me around !', 7);
         this.game.input.onDown.add(SimpleGame.prototype.tap, this);
-        this.beginTag();
+        //this.beginTag();
     };
     SimpleGame.prototype.update = function () {
         var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
@@ -125,6 +132,9 @@ var SimpleGame = /** @class */ (function () {
             this.beginN8();
         if (this.ghost.position.x < 31)
             this.ghostTweenR.start();
+        if (this.day == 1 && hours == 13) {
+            this.tag1Bildhaengen();
+        }
     };
     SimpleGame.prototype.beginTag = function () {
         if (!this.isDay) {
@@ -134,6 +144,8 @@ var SimpleGame = /** @class */ (function () {
             this.ghost.visible = false;
             var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4'];
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
+            this.grl.position = new Phaser.Point(206 + 10, 122);
+            this.grl.visible = true;
         }
     };
     SimpleGame.prototype.beginN8 = function () {
@@ -144,6 +156,8 @@ var SimpleGame = /** @class */ (function () {
             this.ghost.visible = true;
             var nachtsounds = ['nacht1', 'nacht2', 'nacht3', 'nacht4', 'nacht5', 'nacht6'];
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
+            this.grl.position = new Phaser.Point(206 + 10, 122);
+            this.grl.visible = false;
         }
     };
     SimpleGame.prototype.render = function () {

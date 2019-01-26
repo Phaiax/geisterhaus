@@ -38,6 +38,8 @@ class SimpleGame {
 
     grlCarryBild: Phaser.Tween;
     bildWirdgehaengt: Phaser.Tween;
+    bildWirdgehaengt2: Phaser.Tween;
+    bildWirdgehaengt3: Phaser.Tween;
 
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
@@ -57,15 +59,21 @@ class SimpleGame {
     tag1Bildhaengen()
     {
         // position girl in the beginning to the door
-        this.picture.position = new Phaser.Point(208, 122);
-        this.grl.position = new Phaser.Point(208, 122);
-
+        this.picture.position = new Phaser.Point(200+20, 130);
+        this.grl.position = new Phaser.Point(206+10, 122);
+        this.picture.visible = true;
+        this.grl.visible = true;
 
         // let her with the bild walk to the bild haeng position
-        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.bildWirdgehaengt.chain(this.bildWirdgehaengt2);
+        this.bildWirdgehaengt2.chain(this.bildWirdgehaengt3);
         this.grlCarryBild.start();
         this.bildWirdgehaengt.start();
+
         //after. position bild on correct position
         
         // play sound?
@@ -98,6 +106,17 @@ class SimpleGame {
         this.tag.z = 6;
         this.tag.visible = false;
 
+
+
+
+
+       
+        this.grl = this.game.add.sprite(100, 122, 'grl');
+        this.grl.anchor = new Phaser.Point(1, 1);
+        this.grl.scale = new Phaser.Point(1,1);
+        this.grl.visible = false;    
+
+
         this.picture = this.game.add.sprite(90, 100, 'framedpicture');
         this.picture.anchor = new Phaser.Point(1, 1);
         this.picture.scale = new Phaser.Point(1,1);
@@ -118,10 +137,6 @@ class SimpleGame {
         this.ghostTweenR.start();
         this.ghost.z = 1;
 
-        this.grl = this.game.add.sprite(100, 122, 'grl');
-        this.grl.anchor = new Phaser.Point(1, 1);
-        this.grl.scale = new Phaser.Point(1,1);
-        
 
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -146,7 +161,7 @@ class SimpleGame {
         this.game.input.onDown.add(SimpleGame.prototype.tap, this);
         
 
-        this.beginTag();
+        //this.beginTag();
     }
 
     day : number = 1;
@@ -166,7 +181,12 @@ class SimpleGame {
         else
             this.beginN8(); 
         if (this.ghost.position.x < 31)
-            this.ghostTweenR.start();    
+            this.ghostTweenR.start(); 
+        
+        if(this.day == 1 && hours == 13)
+        {
+            this.tag1Bildhaengen();
+        }  
         
     }
 
@@ -181,6 +201,9 @@ class SimpleGame {
             this.ghost.visible = false;
             var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4']
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
+            this.grl.position = new Phaser.Point(206+10, 122);
+            this.grl.visible = true;
+  
         }
     }
 
@@ -193,6 +216,8 @@ class SimpleGame {
             this.ghost.visible = true;
             var nachtsounds = ['nacht1', 'nacht2', 'nacht3', 'nacht4', 'nacht5', 'nacht6']
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
+            this.grl.position = new Phaser.Point(206+10, 122);
+            this.grl.visible = false;
         }
     }
 
