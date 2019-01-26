@@ -3,12 +3,21 @@
 class SimpleGame {
 
     constructor() {
-        this.game = new Phaser.Game(240, 135, Phaser.CANVAS, 'content', { 
-            preload: () => { this.preload() },
-            create: () => { this.create() },
-            update: () => { this.update() },
-            render: () => { this.render() }  });
-        
+        var config = {
+            width: 240,
+            height: 135,
+            renderer: Phaser.CANVAS,
+            antialias: false,
+            parent: 'content',
+            state: {
+                preload: () => { this.preload() },
+                create: () => { this.create() },
+                update: () => { this.update() },
+                render: () => { this.render() }
+            }
+        }
+
+        this.game = new Phaser.Game(config);
     }
 
     game: Phaser.Game;
@@ -85,6 +94,10 @@ class SimpleGame {
         });
         fullscreen_button.anchor.setTo(1, 0);
         fullscreen_button.scale = new Phaser.Point(0.5, 0.5);
+
+        this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
+        this.game.scale.setUserScale(2.5, 2.5);
+
 
         //this.time = this.game.add.text(3, 3, "");
         //this.time.scale = new Phaser.Point(0.3, 0.3);

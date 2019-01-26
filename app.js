@@ -2,12 +2,20 @@
 var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
         var _this = this;
-        this.game = new Phaser.Game(240, 135, Phaser.CANVAS, 'content', {
-            preload: function () { _this.preload(); },
-            create: function () { _this.create(); },
-            update: function () { _this.update(); },
-            render: function () { _this.render(); }
-        });
+        var config = {
+            width: 240,
+            height: 135,
+            renderer: Phaser.CANVAS,
+            antialias: false,
+            parent: 'content',
+            state: {
+                preload: function () { _this.preload(); },
+                create: function () { _this.create(); },
+                update: function () { _this.update(); },
+                render: function () { _this.render(); }
+            }
+        };
+        this.game = new Phaser.Game(config);
     }
     SimpleGame.prototype.preload = function () {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
@@ -56,6 +64,8 @@ var SimpleGame = /** @class */ (function () {
         });
         fullscreen_button.anchor.setTo(1, 0);
         fullscreen_button.scale = new Phaser.Point(0.5, 0.5);
+        this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
+        this.game.scale.setUserScale(2.5, 2.5);
         //this.time = this.game.add.text(3, 3, "");
         //this.time.scale = new Phaser.Point(0.3, 0.3);
         this.time = this.game.add.bitmapText(3, 3, 'pixelfont', 'Drag me around !', 7);
