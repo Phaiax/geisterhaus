@@ -36,6 +36,9 @@ class SimpleGame {
     ghost: Phaser.Sprite;
     grl: Phaser.Sprite;
 
+    grlCarryBild: Phaser.Tween;
+    bildWirdgehaengt: Phaser.Tween;
+
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
         this.game.load.image('framedpicture', 'assets/ship.png');
@@ -51,13 +54,27 @@ class SimpleGame {
         this.game.load.audio('sound_aufhaengen', 'assets/sound/bildaufhaengen.mp3');
     }
 
+    tag1Bildhaengen()
+    {
+        // position girl in the beginning to the door
+        this.picture.position = new Phaser.Point(208, 122);
+        this.grl.position = new Phaser.Point(208, 122);
+
+
+        // let her with the bild walk to the bild haeng position
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.grlCarryBild.start();
+        this.bildWirdgehaengt.start();
+        //after. position bild on correct position
+        
+        // play sound?
+    }
 
     create() {
-
-
         this.fxbildfaellt = this.game.add.audio('sound_pic_faellt');
-        this.fxknock = this.game.add.audio('sound_knock');
         this.fxaufhaengen = this.game.add.audio('sound_aufhaengen');
+        this.fxknock = this.game.add.audio('sound_knock');
         this.fxgutenmorgen = this.game.add.audio('sound_morgen_nacht');
         this.fxgutenmorgen.addMarker('morgen1', 0.046, 0.871);
         this.fxgutenmorgen.addMarker('morgen2', 1.126, 0.894);
@@ -71,6 +88,7 @@ class SimpleGame {
         this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
 
 
+        this.fx = this.game.add.audio('sound_pic_faellt');
 
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
@@ -85,6 +103,7 @@ class SimpleGame {
         this.picture.scale = new Phaser.Point(1,1);
         this.picturedowntween = this.game.add.tween(this.picture).to( { y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
+        this.picture.visible = false;
 
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
