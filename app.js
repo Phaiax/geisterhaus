@@ -16,9 +16,11 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
+        this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
     };
     SimpleGame.prototype.create = function () {
         var _this = this;
+        this.fx = this.game.add.audio('sound_pic_faellt');
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
         this.tag.visible = false;
@@ -78,8 +80,13 @@ var SimpleGame = /** @class */ (function () {
     SimpleGame.prototype.render = function () {
     };
     SimpleGame.prototype.tap = function () {
-        if (this.game.input.x < this.picture.x) {
-            this.picturedowntween.start();
+        var _this = this;
+        if (!this.picHasFallen && this.game.input.x < this.picture.x) {
+            this.picHasFallen = true;
+            this.fx.play();
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                _this.picturedowntween.start();
+            }, this);
         }
     };
     SimpleGame.prototype.toggle_fullscreen = function () {
