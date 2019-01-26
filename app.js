@@ -43,10 +43,6 @@ var SimpleGame = /** @class */ (function () {
         this.picture.visible = true;
         this.grl.visible = true;
         // let her with the bild walk to the bild haeng position
-        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
         this.bildWirdgehaengt.chain(this.bildWirdgehaengt2);
         this.bildWirdgehaengt2.chain(this.bildWirdgehaengt3);
         this.grlCarryBild.start();
@@ -61,13 +57,10 @@ var SimpleGame = /** @class */ (function () {
         this.kaffee.visible = true;
         this.grl.visible = true;
         // let her with the bild walk to the bild haeng position
-        this.grlCarryKaffee = this.game.add.tween(this.grl).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut, false, 10, 0, false);
-        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 95 }, 1500, Phaser.Easing.Quadratic.InOut, false, 2, 0, false);
-        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
         this.kaffeebewegung.chain(this.kaffeestellen);
         this.kaffeestellen.chain(this.bildWirdgehaengt3);
         this.grlCarryKaffee.start();
+        this.kaffeestellen.start();
         this.kaffeebewegung.start();
         //after. position bild on correct position
         // play sound?
@@ -105,7 +98,6 @@ var SimpleGame = /** @class */ (function () {
         this.picturedowntween = this.game.add.tween(this.picture).to({ y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.pictureerasetween = this.game.add.tween(this.picture).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
         this.picturedowntween.chain(this.pictureerasetween);
-        this.picture.z = 1;
         this.picture.visible = false;
         this.kaffee = this.game.add.sprite(90, 100, 'kaffee');
         this.kaffee.anchor = new Phaser.Point(1, 1);
@@ -137,7 +129,14 @@ var SimpleGame = /** @class */ (function () {
         this.time = this.game.add.bitmapText(3, 3, 'pixelfont', 'Drag me around !', 7);
         this.winlosetxt = this.game.add.bitmapText(60, 65, 'pixelfont2', '', 30);
         this.game.input.onDown.add(SimpleGame.prototype.tap, this);
-        //this.beginTag();
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.grlCarryKaffee = this.game.add.tween(this.grl).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
+        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 93 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65 });
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
     };
     SimpleGame.prototype.update = function () {
         if (!this.gameover) {
@@ -209,7 +208,7 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.tap = function () {
         var _this = this;
-        if (!this.isDay && this.day >= 1 && this.game.input.x < this.picture.x) {
+        if (!this.isDay && this.day >= 2 && this.game.input.x < this.picture.x && !this.picHasFallen) {
             this.knocks += 1;
             this.fxknock.play();
             console.log(this.knocks);

@@ -70,50 +70,43 @@ class SimpleGame {
 
     }
 
-    tag1Bildhaengen()
-    {
+    tag1Bildhaengen() {
         // position girl in the beginning to the door
-        this.picture.position = new Phaser.Point(200+20, 130);
-        this.grl.position = new Phaser.Point(206+10, 122);
+        this.picture.position = new Phaser.Point(200 + 20, 130);
+        this.grl.position = new Phaser.Point(206 + 10, 122);
         this.picture.visible = true;
         this.grl.visible = true;
 
         // let her with the bild walk to the bild haeng position
-        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
-        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+
         this.bildWirdgehaengt.chain(this.bildWirdgehaengt2);
         this.bildWirdgehaengt2.chain(this.bildWirdgehaengt3);
         this.grlCarryBild.start();
         this.bildWirdgehaengt.start();
 
         //after. position bild on correct position
-        
+
         // play sound?
         this.fxaufhaengen.play();
     }
 
-    tag2KaffeemachineStellen()
-    {
-        this.kaffee.position = new Phaser.Point(200+20, 110);
-        this.grl.position = new Phaser.Point(206+10, 122);
+    tag2KaffeemachineStellen() {
+        this.kaffee.position = new Phaser.Point(200 + 20, 110);
+        this.grl.position = new Phaser.Point(206 + 10, 122);
         this.kaffee.visible = true;
         this.grl.visible = true;
 
         // let her with the bild walk to the bild haeng position
 
-        this.grlCarryKaffee= this.game.add.tween(this.grl).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.kaffeebewegung= this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut,false,10,0,false);
-        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 95 }, 1500, Phaser.Easing.Quadratic.InOut,false,2,0,false);
-        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+
         this.kaffeebewegung.chain(this.kaffeestellen);
         this.kaffeestellen.chain(this.bildWirdgehaengt3);
         this.grlCarryKaffee.start();
+        this.kaffeestellen.start();
         this.kaffeebewegung.start();
 
         //after. position bild on correct position
-        
+
         // play sound?
         this.fxaufhaengen.play();
     }
@@ -135,11 +128,14 @@ class SimpleGame {
         this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
 
 
+
+
+
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
         this.tag.visible = false;
 
-        this.n8 =  this.game.add.sprite(0, 0, 'n8');
+        this.n8 = this.game.add.sprite(0, 0, 'n8');
         this.tag.z = 6;
         this.tag.visible = false;
 
@@ -147,28 +143,27 @@ class SimpleGame {
 
 
 
-       
+
         this.grl = this.game.add.sprite(100, 122, 'grl');
         this.grl.anchor = new Phaser.Point(1, 1);
-        this.grl.scale = new Phaser.Point(1,1);
-        this.grl.visible = false;    
+        this.grl.scale = new Phaser.Point(1, 1);
+        this.grl.visible = false;
 
 
         this.picture = this.game.add.sprite(90, 100, 'framedpicture');
         this.picture.anchor = new Phaser.Point(1, 1);
-        this.picture.scale = new Phaser.Point(1,1);
-        this.picturedowntween = this.game.add.tween(this.picture).to( { y: 125 }, 400, Phaser.Easing.Quadratic.In);
+        this.picture.scale = new Phaser.Point(1, 1);
+        this.picturedowntween = this.game.add.tween(this.picture).to({ y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.pictureerasetween = this.game.add.tween(this.picture).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
         this.picturedowntween.chain(this.pictureerasetween);
-        this.picture.z = 1;
         this.picture.visible = false;
 
         this.kaffee = this.game.add.sprite(90, 100, 'kaffee');
         this.kaffee.anchor = new Phaser.Point(1, 1);
-        this.kaffee.scale = new Phaser.Point(1,1);
+        this.kaffee.scale = new Phaser.Point(1, 1);
         this.kaffee.visible = false;
 
-        
+
 
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
@@ -176,7 +171,7 @@ class SimpleGame {
 
         this.ghost = this.game.add.sprite(30, 30, 'ghost');
         this.ghost.anchor = new Phaser.Point(1, 1);
-        this.ghost.scale = new Phaser.Point(1,1);
+        this.ghost.scale = new Phaser.Point(1, 1);
         this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200 }, 1500, Phaser.Easing.Quadratic.InOut);
         this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30 }, 1500, Phaser.Easing.Quadratic.InOut);
         this.ghostTweenR.chain(this.ghostTweenL);
@@ -186,7 +181,7 @@ class SimpleGame {
 
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
-        var fullscreen_button = this.game.add.button(this.game.world.width-5, 5, 'fullscreen', () => {
+        var fullscreen_button = this.game.add.button(this.game.world.width - 5, 5, 'fullscreen', () => {
             console.log("Fullscreen pressed");
             this.toggle_fullscreen();
         });
@@ -199,21 +194,27 @@ class SimpleGame {
 
         //this.time = this.game.add.text(3, 3, "");
         //this.time.scale = new Phaser.Point(0.3, 0.3);
-        this.time = this.game.add.bitmapText(3, 3, 'pixelfont','Drag me around !', 7);
-        this.winlosetxt = this.game.add.bitmapText(60, 65, 'pixelfont2','', 30);
+        this.time = this.game.add.bitmapText(3, 3, 'pixelfont', 'Drag me around !', 7);
+        this.winlosetxt = this.game.add.bitmapText(60, 65, 'pixelfont2', '', 30);
 
 
         this.game.input.onDown.add(SimpleGame.prototype.tap, this);
-        
 
-        //this.beginTag();
+
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 90 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt2 = this.game.add.tween(this.picture).to({ y: 92 }, 800, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
+        this.grlCarryKaffee = this.game.add.tween(this.grl).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
+        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45, y: 93 }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65 });
+        this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 }, 2000, Phaser.Easing.Sinusoidal.InOut);
     }
 
-    day : number = 1;
+    day: number = 1;
 
     update() {
-        if (!this.gameover)
-        {
+        if (!this.gameover) {
             var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
             var minutes = Math.floor((hours % 1) * 60);
             this.day = Math.floor((hours - 8) / 24) + 1;
@@ -226,27 +227,24 @@ class SimpleGame {
             if (hours >= 8 && hours <= 20)
                 this.beginTag();
             else
-                this.beginN8(); 
+                this.beginN8();
             if (this.ghost.position.x < 31)
-                this.ghostTweenR.start(); 
-            
-                if(this.day == 1 && hours == 13)
-                {
-                    //this.tag1Bildhaengen();
-                    this.tag2KaffeemachineStellen();
-            }  
-            if(this.day == 2 && hours == 13)
-            {
+                this.ghostTweenR.start();
+
+            if (this.day == 1 && hours == 13) {
+                //this.tag1Bildhaengen();
+                this.tag2KaffeemachineStellen();
+            }
+            if (this.day == 2 && hours == 13) {
                 this.tag1Bildhaengen();
 
-            }  
-        }    
+            }
+        }
     }
 
-    isDay:boolean;
+    isDay: boolean;
 
-    beginTag()
-    {
+    beginTag() {
         if (!this.isDay) {
             this.isDay = true;
             this.tag.visible = true;
@@ -254,16 +252,15 @@ class SimpleGame {
             this.ghost.visible = false;
             var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4']
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
-            this.grl.position = new Phaser.Point(206+10, 122);
+            this.grl.position = new Phaser.Point(206 + 10, 122);
             this.grl.visible = true;
-            if(this.day == 3)
+            if (this.day == 3)
                 this.checkWinLose();
-  
+
         }
     }
 
-    beginN8()
-    {
+    beginN8() {
         if (this.isDay) {
             this.isDay = false;
             this.tag.visible = false;
@@ -271,22 +268,19 @@ class SimpleGame {
             this.ghost.visible = true;
             var nachtsounds = ['nacht1', 'nacht2', 'nacht3', 'nacht4', 'nacht5', 'nacht6']
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
-            this.grl.position = new Phaser.Point(206+10, 122);
+            this.grl.position = new Phaser.Point(206 + 10, 122);
             this.grl.visible = false;
         }
     }
 
-    checkWinLose()
-    {
-        if (this.picHasFallen == true)
-        {
+    checkWinLose() {
+        if (this.picHasFallen == true) {
             this.winlosetxt.text = "WIN!";
             this.gameover = true;
-        }    
-        else
-        {
-            this.winlosetxt.text = "LOSE!";  
-            this.gameover = true;   
+        }
+        else {
+            this.winlosetxt.text = "LOSE!";
+            this.gameover = true;
         }
     }
 
@@ -294,11 +288,11 @@ class SimpleGame {
 
     }
 
-    picHasFallen : boolean = false;
-    knocks : number = 0;
+    picHasFallen: boolean = false;
+    knocks: number = 0;
 
     tap() {
-        if (!this.isDay && this.day >= 1 && this.game.input.x < this.picture.x) {
+        if (!this.isDay && this.day >= 2 && this.game.input.x < this.picture.x &&  !this.picHasFallen) {
             this.knocks += 1;
             this.fxknock.play();
             console.log(this.knocks);
@@ -313,12 +307,10 @@ class SimpleGame {
     }
 
     toggle_fullscreen() {
-        if (this.game.scale.isFullScreen)
-        {
+        if (this.game.scale.isFullScreen) {
             this.game.scale.stopFullScreen();
         }
-        else
-        {
+        else {
             this.game.scale.startFullScreen(false);
         }
     }
