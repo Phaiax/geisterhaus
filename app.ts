@@ -77,6 +77,7 @@ class SimpleGame {
         //after. position bild on correct position
         
         // play sound?
+        this.fxaufhaengen.play();
     }
 
     create() {
@@ -95,8 +96,6 @@ class SimpleGame {
         this.fxgutenmorgen.addMarker('nacht5', 8.382, 1.045);
         this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
 
-
-        this.fx = this.game.add.audio('sound_pic_faellt');
 
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;

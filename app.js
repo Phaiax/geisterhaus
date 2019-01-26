@@ -51,6 +51,7 @@ var SimpleGame = /** @class */ (function () {
         this.bildWirdgehaengt.start();
         //after. position bild on correct position
         // play sound?
+        this.fxaufhaengen.play();
     };
     SimpleGame.prototype.create = function () {
         var _this = this;
@@ -68,7 +69,6 @@ var SimpleGame = /** @class */ (function () {
         this.fxgutenmorgen.addMarker('nacht4', 7.588, 0.789);
         this.fxgutenmorgen.addMarker('nacht5', 8.382, 1.045);
         this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
-        this.fx = this.game.add.audio('sound_pic_faellt');
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
         this.tag.visible = false;
