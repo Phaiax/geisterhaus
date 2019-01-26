@@ -28,6 +28,18 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
     };
+    SimpleGame.prototype.tag1Bildhaengen = function () {
+        // position girl in the beginning to the door
+        this.picture.position = new Phaser.Point(208, 122);
+        this.grl.position = new Phaser.Point(208, 122);
+        // let her with the bild walk to the bild haeng position
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.grlCarryBild.start();
+        this.bildWirdgehaengt.start();
+        //after. position bild on correct position
+        // play sound?
+    };
     SimpleGame.prototype.create = function () {
         var _this = this;
         this.fx = this.game.add.audio('sound_pic_faellt');
@@ -42,6 +54,7 @@ var SimpleGame = /** @class */ (function () {
         this.picture.scale = new Phaser.Point(1, 1);
         this.picturedowntween = this.game.add.tween(this.picture).to({ y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
+        this.picture.visible = false;
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
         foreground.z = 0;

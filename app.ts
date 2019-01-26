@@ -33,6 +33,9 @@ class SimpleGame {
     ghost: Phaser.Sprite;
     grl: Phaser.Sprite;
 
+    grlCarryBild: Phaser.Tween;
+    bildWirdgehaengt: Phaser.Tween;
+
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
         this.game.load.image('framedpicture', 'assets/ship.png');
@@ -45,14 +48,27 @@ class SimpleGame {
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
     }
 
+    tag1Bildhaengen()
+    {
+        // position girl in the beginning to the door
+        this.picture.position = new Phaser.Point(208, 122);
+        this.grl.position = new Phaser.Point(208, 122);
+
+
+        // let her with the bild walk to the bild haeng position
+        this.grlCarryBild = this.game.add.tween(this.grl).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.bildWirdgehaengt = this.game.add.tween(this.picture).to({ x: 77 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.grlCarryBild.start();
+        this.bildWirdgehaengt.start();
+        //after. position bild on correct position
+        
+        // play sound?
+    }
 
     create() {
 
 
         this.fx = this.game.add.audio('sound_pic_faellt');
-
-
-
 
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
@@ -67,6 +83,7 @@ class SimpleGame {
         this.picture.scale = new Phaser.Point(1,1);
         this.picturedowntween = this.game.add.tween(this.picture).to( { y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
+        this.picture.visible = false;
 
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
@@ -120,8 +137,8 @@ class SimpleGame {
         var hours_0 = "";
         var minutes_0 = "";
         if (hours < 10) { hours_0 = "0"; }
-        if (minutes < 10) { minutes_0 = "0"; }
-        this.time.text = "Tag " + days + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
+            if (minutes < 10) { minutes_0 = "0"; }
+                this.time.text = "Tag " + days + " um " + hours_0 + hours + ":" + minutes_0 + minutes;
         if (hours >= 8 && hours <= 20)
             this.beginTag();
         else
