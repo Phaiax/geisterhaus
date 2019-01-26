@@ -35,6 +35,9 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
         this.game.load.audio('sound_knock', 'assets/sound/knock.mp3');
         this.game.load.audio('sound_aufhaengen', 'assets/sound/bildaufhaengen.mp3');
+        this.game.load.audio('sound_kaffeeneu', 'assets/sound/kaffee.mp3');
+        this.game.load.audio('sound_kaffeefliegt', 'assets/sound/kaffeefliegt.mp3');
+        this.game.load.audio('sound_story', 'assets/sound/story.mp3');
     };
     SimpleGame.prototype.tag1Bildhaengen = function () {
         // position girl in the beginning to the door
@@ -64,7 +67,7 @@ var SimpleGame = /** @class */ (function () {
         this.kaffeebewegung.start();
         //after. position bild on correct position
         // play sound?
-        this.fxaufhaengen.play();
+        this.fxkaffeeneu.play();
     };
     SimpleGame.prototype.create = function () {
         var _this = this;
@@ -82,6 +85,9 @@ var SimpleGame = /** @class */ (function () {
         this.fxgutenmorgen.addMarker('nacht4', 7.588, 0.789);
         this.fxgutenmorgen.addMarker('nacht5', 8.382, 1.045);
         this.fxgutenmorgen.addMarker('nacht6', 9.764, 1.881);
+        this.fxkaffeefliegt = this.game.add.audio('sound_kaffeefliegt');
+        this.fxkaffeeneu = this.game.add.audio('sound_kaffeeneu');
+        this.fxstory = this.game.add.audio('sound_story');
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
         this.tag.visible = false;
@@ -162,11 +168,13 @@ var SimpleGame = /** @class */ (function () {
                 this.beginN8();
             if (this.ghost.position.x < 31)
                 this.ghostTweenR.start();
-            if (this.day == 1 && hours == 13) {
+            if (this.day == 1 && hours == 13 && !this.kaffeeaufgestellt) {
                 //this.tag1Bildhaengen();
+                this.kaffeeaufgestellt = true;
                 this.tag2KaffeemachineStellen();
             }
-            if (this.day == 2 && hours == 13) {
+            if (this.day == 2 && hours == 13 && !this.bildIstAufgehaengt) {
+                this.bildIstAufgehaengt = true;
                 this.tag1Bildhaengen();
             }
         }
@@ -212,7 +220,7 @@ var SimpleGame = /** @class */ (function () {
     SimpleGame.prototype.tap = function () {
         var _this = this;
         var pictureHit = this.picture.getBounds().contains(this.game.input.x, this.game.input.y);
-        if (!this.isDay && this.day >= 2 && pictureHit && !this.picHasFallen) {
+        if (!this.isDay && this.bildIstAufgehaengt && pictureHit && !this.picHasFallen) {
             this.knocks += 1;
             this.fxknock.play();
             console.log(this.knocks);
@@ -224,8 +232,11 @@ var SimpleGame = /** @class */ (function () {
                 }, this);
             }
         }
-        if (!this.isDay && this.day >= 1) {
-            this.kaffeedowntween.start();
+        if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt) {
+            this.fxkaffeefliegt.play();
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                _this.kaffeedowntween.start();
+            }, this);
             this.kaffeehasfallen = true;
         }
     };
