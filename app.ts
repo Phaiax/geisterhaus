@@ -15,9 +15,12 @@ class SimpleGame {
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
     picturedowntween: Phaser.Tween;
+    ghostTweenR: Phaser.Tween;
+    ghostTweenL: Phaser.Tween;
     time: Phaser.BitmapText;
     tag: Phaser.Sprite;
     n8: Phaser.Sprite;
+    ghost: Phaser.Sprite;
 
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
@@ -25,6 +28,7 @@ class SimpleGame {
         this.game.load.image('foreground', 'assets/foreground.png');
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
+        this.game.load.image('ghost', 'assets/ghost.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
 
     }
@@ -46,10 +50,20 @@ class SimpleGame {
         this.picturedowntween = this.game.add.tween(this.picture).to( { y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
 
-        // Background
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
         foreground.z = 0;
+
+        this.ghost = this.game.add.sprite(30, 30, 'ghost');
+        this.ghost.anchor = new Phaser.Point(1, 1);
+        this.ghost.scale = new Phaser.Point(1,1);
+        this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30 }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenR.chain(this.ghostTweenL);
+        
+        this.ghostTweenR.start();
+        this.ghost.z = 1;
+        
 
         // Fullscreen button
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -87,6 +101,8 @@ class SimpleGame {
             this.beginTag();
         else
             this.beginN8(); 
+        if (this.ghost.position.x < 31)
+            this.ghostTweenR.start();    
         
     }
 
@@ -94,12 +110,14 @@ class SimpleGame {
     {
         this.tag.visible = true;
         this.n8.visible = false;
+        this.ghost.visible = false;
     }
 
     beginN8()
     {
         this.tag.visible = false;
         this.n8.visible = true;
+        this.ghost.visible = true;
     }
 
     render() {
