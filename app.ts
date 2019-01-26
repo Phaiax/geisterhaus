@@ -21,8 +21,10 @@ class SimpleGame {
     }
 
     game: Phaser.Game;
-    fx: Phaser.Sound;
+    fxbildfaellt: Phaser.Sound;
     fxgutenmorgen: Phaser.Sound;
+    fxknock: Phaser.Sound;
+    fxaufhaengen: Phaser.Sound;
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
     picturedowntween: Phaser.Tween;
@@ -45,13 +47,17 @@ class SimpleGame {
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
         this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
+        this.game.load.audio('sound_knock', 'assets/sound/knock.mp3');
+        this.game.load.audio('sound_aufhaengen', 'assets/sound/bildaufhaengen.mp3');
     }
 
 
     create() {
 
 
-        this.fx = this.game.add.audio('sound_pic_faellt');
+        this.fxbildfaellt = this.game.add.audio('sound_pic_faellt');
+        this.fxknock = this.game.add.audio('sound_knock');
+        this.fxaufhaengen = this.game.add.audio('sound_aufhaengen');
         this.fxgutenmorgen = this.game.add.audio('sound_morgen_nacht');
         this.fxgutenmorgen.addMarker('morgen1', 0.046, 0.871);
         this.fxgutenmorgen.addMarker('morgen2', 1.126, 0.894);
@@ -129,7 +135,7 @@ class SimpleGame {
     update() {
         var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
         var minutes = Math.floor((hours % 1) * 60);
-        this.day = Math.floor(hours / 24) + 1;
+        this.day = Math.floor((hours - 8) / 24) + 1;
         hours = Math.floor(hours % 24);
         var hours_0 = "";
         var minutes_0 = "";
@@ -175,15 +181,21 @@ class SimpleGame {
 
     }
 
-    picHasFallen : boolean;
+    picHasFallen : boolean = false;
+    knocks : number = 0;
 
     tap() {
-        if (!this.isDay && !this.picHasFallen && this.game.input.x < this.picture.x) {
-            this.picHasFallen = true;
-            this.fx.play();
-            this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
-                this.picturedowntween.start();
-            }, this);
+        if (!this.isDay && this.day >= 1 && this.game.input.x < this.picture.x) {
+            this.knocks += 1;
+            this.fxknock.play();
+            console.log(this.knocks);
+            if (this.knocks == 10 && !this.picHasFallen) {
+                this.picHasFallen = true;
+                this.fxbildfaellt.play();
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
+                    this.picturedowntween.start();
+                }, this);
+            }
         }
     }
 

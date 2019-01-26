@@ -3,6 +3,8 @@ var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
         var _this = this;
         this.day = 1;
+        this.picHasFallen = false;
+        this.knocks = 0;
         var config = {
             width: 240,
             height: 135,
@@ -29,10 +31,14 @@ var SimpleGame = /** @class */ (function () {
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
         this.game.load.audio('sound_morgen_nacht', 'assets/sound/gutenmorgengutenacht.mp3');
+        this.game.load.audio('sound_knock', 'assets/sound/knock.mp3');
+        this.game.load.audio('sound_aufhaengen', 'assets/sound/bildaufhaengen.mp3');
     };
     SimpleGame.prototype.create = function () {
         var _this = this;
-        this.fx = this.game.add.audio('sound_pic_faellt');
+        this.fxbildfaellt = this.game.add.audio('sound_pic_faellt');
+        this.fxknock = this.game.add.audio('sound_knock');
+        this.fxaufhaengen = this.game.add.audio('sound_aufhaengen');
         this.fxgutenmorgen = this.game.add.audio('sound_morgen_nacht');
         this.fxgutenmorgen.addMarker('morgen1', 0.046, 0.871);
         this.fxgutenmorgen.addMarker('morgen2', 1.126, 0.894);
@@ -88,7 +94,7 @@ var SimpleGame = /** @class */ (function () {
     SimpleGame.prototype.update = function () {
         var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
         var minutes = Math.floor((hours % 1) * 60);
-        this.day = Math.floor(hours / 24) + 1;
+        this.day = Math.floor((hours - 8) / 24) + 1;
         hours = Math.floor(hours % 24);
         var hours_0 = "";
         var minutes_0 = "";
@@ -130,12 +136,17 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.tap = function () {
         var _this = this;
-        if (!this.isDay && !this.picHasFallen && this.game.input.x < this.picture.x) {
-            this.picHasFallen = true;
-            this.fx.play();
-            this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
-                _this.picturedowntween.start();
-            }, this);
+        if (!this.isDay && this.day >= 1 && this.game.input.x < this.picture.x) {
+            this.knocks += 1;
+            this.fxknock.play();
+            console.log(this.knocks);
+            if (this.knocks == 10 && !this.picHasFallen) {
+                this.picHasFallen = true;
+                this.fxbildfaellt.play();
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                    _this.picturedowntween.start();
+                }, this);
+            }
         }
     };
     SimpleGame.prototype.toggle_fullscreen = function () {
