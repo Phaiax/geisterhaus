@@ -208,7 +208,8 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.tap = function () {
         var _this = this;
-        if (!this.isDay && this.day >= 2 && this.game.input.x < this.picture.x && !this.picHasFallen) {
+        var pictureHit = this.picture.getBounds().contains(this.game.input.x, this.game.input.y);
+        if (!this.isDay && this.day >= 2 && pictureHit && !this.picHasFallen) {
             this.knocks += 1;
             this.fxknock.play();
             console.log(this.knocks);
