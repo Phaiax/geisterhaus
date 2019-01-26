@@ -32,11 +32,13 @@ class SimpleGame {
     tag: Phaser.Sprite;
     n8: Phaser.Sprite;
     ghost: Phaser.Sprite;
+    grl: Phaser.Sprite;
 
     preload() {
         this.game.load.image('fullscreen', 'assets/fullscreen.png');
         this.game.load.image('framedpicture', 'assets/ship.png');
         this.game.load.image('foreground', 'assets/foreground.png');
+        this.game.load.image('grl', 'assets/grl.png');
         this.game.load.image('tag', 'assets/tagBG.png');
         this.game.load.image('n8', 'assets/n8BG.png');
         this.game.load.image('ghost', 'assets/ghost.png');
@@ -88,9 +90,12 @@ class SimpleGame {
         this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200 }, 1500, Phaser.Easing.Quadratic.InOut);
         this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30 }, 1500, Phaser.Easing.Quadratic.InOut);
         this.ghostTweenR.chain(this.ghostTweenL);
-        
         this.ghostTweenR.start();
         this.ghost.z = 1;
+
+        this.grl = this.game.add.sprite(100, 122, 'grl');
+        this.grl.anchor = new Phaser.Point(1, 1);
+        this.grl.scale = new Phaser.Point(1,1);
         
 
         // Fullscreen button
