@@ -27,8 +27,8 @@ var SimpleGame = /** @class */ (function () {
         this.tag.visible = false;
         this.picture = this.game.add.sprite(90, 100, 'framedpicture');
         this.picture.anchor = new Phaser.Point(1, 1);
-        this.picture.scale = new Phaser.Point(0.2, 0.2);
-        this.picturedowntween = this.game.add.tween(this.picture).to({ y: 130 }, 400, Phaser.Easing.Quadratic.In);
+        this.picture.scale = new Phaser.Point(1, 1);
+        this.picturedowntween = this.game.add.tween(this.picture).to({ y: 125 }, 400, Phaser.Easing.Quadratic.In);
         this.picture.z = 1;
         // Background
         var foreground = this.game.add.sprite(0, 0, 'foreground');
