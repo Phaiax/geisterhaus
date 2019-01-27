@@ -24,6 +24,7 @@ class SimpleGame {
 
     game: Phaser.Game;
     gametime: Phaser.Timer;
+    start_button: Phaser.Button;
     fxbildfaellt: Phaser.Sound;
     fxgutenmorgen: Phaser.Sound;
     fxknock: Phaser.Sound;
@@ -72,6 +73,7 @@ class SimpleGame {
         this.game.load.image('n8', 'assets/scaled/n8BG.png');
         this.game.load.image('kaffee', 'assets/scaled/kaffee.png');
         this.game.load.image('ghost', 'assets/scaled/ghost.png');
+        this.game.load.image('startbtn', 'assets/scaled/btnbig.png');
         this.game.load.bitmapFont('pixelfont', 'assets/carrier_command.png', 'assets/carrier_command.xml');
         this.game.load.bitmapFont('pixelfont2', 'assets/carrier_command2.png', 'assets/carrier_command.xml');
         this.game.load.audio('sound_pic_faellt', 'assets/sound/bildfaellt.mp3');
@@ -144,7 +146,6 @@ class SimpleGame {
         this.fxstory = this.game.add.audio('sound_story');
 
         this.gametime = this.game.time.create(false);
-        this.gametime.start();
 
 
 
@@ -186,14 +187,7 @@ class SimpleGame {
         foreground.anchor.set(0);
         foreground.z = 0;
 
-        this.ghost = this.game.add.sprite(30*m, 30*m, 'ghost');
-        this.ghost.anchor = new Phaser.Point(1, 1);
-        this.ghost.scale = new Phaser.Point(1, 1);
-        this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200*m }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30*m }, 1500, Phaser.Easing.Quadratic.InOut);
-        this.ghostTweenR.chain(this.ghostTweenL);
-        this.ghostTweenR.start();
-        this.ghost.z = 1;
+
 
 
         // Fullscreen button
@@ -213,7 +207,24 @@ class SimpleGame {
         pause_button.anchor.setTo(1, 0);
         pause_button.scale.set(0.5);
 
+        this.fxstory.play();
+        this.start_button = this.game.add.button(this.game.world.width/2, this.game.world.height/2, 'startbtn', () => {
+            this.gametime.start();
+            this.start_button.visible = false;
+            this.fxstory.stop();
+            //this.pause();
+        });
+        this.start_button.anchor.set(0.5,0.5);
 
+
+        this.ghost = this.game.add.sprite(30*m, 30*m, 'ghost');
+        this.ghost.anchor = new Phaser.Point(1, 1);
+        this.ghost.scale = new Phaser.Point(1, 1);
+        this.ghostTweenR = this.game.add.tween(this.ghost).to({ x: 200*m }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenL = this.game.add.tween(this.ghost).to({ x: 30*m }, 1500, Phaser.Easing.Quadratic.InOut);
+        this.ghostTweenR.chain(this.ghostTweenL);
+        this.ghostTweenR.start();
+        this.ghost.z = 1;
 
         this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
         this.game.scale.setUserScale(0.5, 0.5);
