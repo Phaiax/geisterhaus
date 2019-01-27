@@ -3,6 +3,7 @@ var m = 5;
 var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
         var _this = this;
+        this.kaffeehasfallen = false;
         this.day = 1;
         this.picHasFallen = false;
         this.knocks = 0;
@@ -65,7 +66,7 @@ var SimpleGame = /** @class */ (function () {
         this.kaffeebewegung.chain(this.kaffeestellen);
         this.kaffeestellen.chain(this.bildWirdgehaengt3);
         this.grlCarryKaffee.start();
-        this.kaffeestellen.start();
+        //this.kaffeestellen.start();
         this.kaffeebewegung.start();
         //after. position bild on correct position
         // play sound?
@@ -98,6 +99,11 @@ var SimpleGame = /** @class */ (function () {
         this.n8 = this.game.add.sprite(0, 0, 'n8');
         this.tag.z = 6;
         this.tag.visible = false;
+        this.kaffee = this.game.add.sprite(90 * m, 100 * m, 'kaffee');
+        this.kaffee.anchor = new Phaser.Point(1, 1);
+        this.kaffee.scale = new Phaser.Point(1, 1);
+        this.kaffee.visible = false;
+        this.kaffee.inputEnabled = true;
         this.grl = this.game.add.sprite(100 * m, 122 * m, 'grl');
         this.grl.anchor = new Phaser.Point(1, 1);
         this.grl.scale = new Phaser.Point(1, 1);
@@ -109,10 +115,6 @@ var SimpleGame = /** @class */ (function () {
         this.pictureerasetween = this.game.add.tween(this.picture).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
         this.picturedowntween.chain(this.pictureerasetween);
         this.picture.visible = false;
-        this.kaffee = this.game.add.sprite(90 * m, 100 * m, 'kaffee');
-        this.kaffee.anchor = new Phaser.Point(1, 1);
-        this.kaffee.scale = new Phaser.Point(1, 1);
-        this.kaffee.visible = false;
         var foreground = this.game.add.sprite(0, 0, 'foreground');
         foreground.anchor.set(0);
         foreground.z = 0;
@@ -152,7 +154,7 @@ var SimpleGame = /** @class */ (function () {
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 * m }, 2000, Phaser.Easing.Sinusoidal.InOut);
         this.grlCarryKaffee = this.game.add.tween(this.grl).to({ x: 65 * m }, 1500, Phaser.Easing.Quadratic.InOut);
         this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65 * m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
-        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45 * m, y: 93 * m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65 * m });
+        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45 * m, y: 93 * m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215 * m }, 2000, Phaser.Easing.Sinusoidal.InOut);
         this.kaffeedowntween = this.game.add.tween(this.kaffee).to({ x: 200 * m, y: 125 * m }, 300, Phaser.Easing.Exponential.In);
         this.kaffeeerasetween = this.game.add.tween(this.kaffee).to({ alpha: 0 }, 800, Phaser.Easing.Quadratic.In);
@@ -200,6 +202,8 @@ var SimpleGame = /** @class */ (function () {
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
             this.grl.position = new Phaser.Point(206 * m + 10 * m, 122 * m);
             this.grl.visible = true;
+            this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
+            this.kaffee.input.disableDrag();
             if (this.day == 3)
                 this.checkWinLose();
         }
@@ -214,6 +218,27 @@ var SimpleGame = /** @class */ (function () {
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
             this.grl.position = new Phaser.Point(206 * m + 10 * m, 122 * m);
             this.grl.visible = false;
+            this.kaffee.input.enableDrag();
+            this.kaffee.events.onDragStart.add(this.onKaffeeDragStart, this);
+            this.kaffee.events.onDragStop.add(this.onKaffeeDragStop, this);
+        }
+    };
+    SimpleGame.prototype.onKaffeeDragStart = function (sprite, pointer) {
+    };
+    SimpleGame.prototype.onKaffeeDragStop = function (sprite, pointer) {
+        var _this = this;
+        var droppedX = pointer.x;
+        if (droppedX > 120 * m) {
+            if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt == true && this.kaffeehasfallen == false) {
+                this.fxkaffeefliegt.play();
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                    _this.kaffeedowntween.start();
+                }, this);
+                this.kaffeehasfallen = true;
+            }
+        }
+        else {
+            this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
         }
     };
     SimpleGame.prototype.checkWinLose = function () {
@@ -242,13 +267,6 @@ var SimpleGame = /** @class */ (function () {
                     _this.picturedowntween.start();
                 }, this);
             }
-        }
-        if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt) {
-            this.fxkaffeefliegt.play();
-            this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
-                _this.kaffeedowntween.start();
-            }, this);
-            this.kaffeehasfallen = true;
         }
     };
     SimpleGame.prototype.toggle_fullscreen = function () {
