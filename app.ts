@@ -32,6 +32,10 @@ class SimpleGame {
     fxkaffeeneu: Phaser.Sound;
     fxkaffeefliegt: Phaser.Sound;
     fxstory: Phaser.Sound;
+    fxloose: Phaser.Sound;
+    fxkaffeewoist: Phaser.Sound;
+    fxbildweg: Phaser.Sound;
+    fxhierspukts: Phaser.Sound;
     bmd: Phaser.BitmapData;
     picture: Phaser.Sprite;
     kaffee: Phaser.Sprite;
@@ -48,12 +52,15 @@ class SimpleGame {
     gameover: boolean;
     kaffeehasfallen: boolean = false;
     kaffeeaufgestellt: boolean;
+    kaffeeKommentiert : boolean = false;
 
     grlCarryBild: Phaser.Tween;
     bildWirdgehaengt: Phaser.Tween;
     bildWirdgehaengt2: Phaser.Tween;
     bildWirdgehaengt3: Phaser.Tween;
     bildIstAufgehaengt : boolean;
+    bildKommentiert: boolean = false;
+
 
     grlCarryKaffee: Phaser.Tween;
     kaffeebewegung: Phaser.Tween;
@@ -83,6 +90,10 @@ class SimpleGame {
         this.game.load.audio('sound_kaffeeneu', 'assets/sound/kaffee.mp3');
         this.game.load.audio('sound_kaffeefliegt', 'assets/sound/kaffeefliegt.mp3');
         this.game.load.audio('sound_story', 'assets/sound/story.mp3');
+        this.game.load.audio('sound_loose', 'assets/sound/loose.mp3');
+        this.game.load.audio('sound_kaffeewoist', 'assets/sound/kaffewoist.mp3');
+        this.game.load.audio('sound_bildweg', 'assets/sound/bildweg.mp3');
+        this.game.load.audio('sound_hierspukts', 'assets/sound/hierspukts.mp3');
     }
 
     tag1Bildhaengen() {
@@ -144,6 +155,10 @@ class SimpleGame {
         this.fxkaffeefliegt = this.game.add.audio('sound_kaffeefliegt');
         this.fxkaffeeneu = this.game.add.audio('sound_kaffeeneu');
         this.fxstory = this.game.add.audio('sound_story');
+        this.fxloose = this.game.add.audio('sound_loose');
+        this.fxkaffeewoist = this.game.add.audio('sound_kaffeewoist');
+        this.fxbildweg = this.game.add.audio('sound_bildweg');
+        this.fxhierspukts = this.game.add.audio('sound_hierspukts');
 
         this.gametime = this.game.time.create(false);
 
@@ -295,15 +310,40 @@ class SimpleGame {
             this.tag.visible = true;
             this.n8.visible = false;
             this.ghost.visible = false;
-            var morgensounds = ['morgen1', 'morgen3', 'morgen2', 'morgen4']
+            var morgensounds = ['morgen3', 'morgen4', 'morgen2', 'morgen1']
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
             this.grl.position = new Phaser.Point(206*m + 10*m, 122*m);
             this.grl.visible = true;
             this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
             this.kaffee.input.disableDrag();
-            if (this.day == 3)
-                this.checkWinLose();
+            if (this.day == 3) {
+                this.Comment(() => { this.checkWinLose(); });
 
+            } else {
+                this.Comment(() => {});
+            }
+
+
+        }
+    }
+
+    Comment(after : Function) {
+        console.log("kaffee " + this.kaffeehasfallen + this.kaffeeKommentiert);
+        console.log("pic " + this.picHasFallen + this.bildKommentiert);
+        if (this.kaffeehasfallen && !this.kaffeeKommentiert) {
+            this.gametime.add(1500, () => {
+                this.fxkaffeewoist.play();
+                this.fxkaffeewoist.onStop.add(after);
+            });
+            this.kaffeeKommentiert = true;
+        } else if (this.picHasFallen && !this.bildKommentiert) {
+            this.gametime.add(1500, () => {
+                this.fxbildweg.play();
+                this.fxbildweg.onStop.add(after);
+            });
+            this.bildKommentiert = true;
+        } else {
+            after();
         }
     }
 
@@ -352,10 +392,12 @@ class SimpleGame {
     checkWinLose() {
         if (this.picHasFallen == true && this.kaffeehasfallen == true) {
             this.winlosetxt.text = "WIN!";
+            this.fxhierspukts.play();
             this.gameover = true;
         }
         else {
             this.winlosetxt.text = "LOSE!";
+            this.fxloose.play();
             this.gameover = true;
         }
     }
