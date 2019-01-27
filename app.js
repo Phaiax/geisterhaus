@@ -23,6 +23,7 @@ var SimpleGame = /** @class */ (function () {
     }
     SimpleGame.prototype.preload = function () {
         this.game.load.image('fullscreen', 'assets/scaled/fullscreen.png');
+        this.game.load.image('pause', 'assets/scaled/pause.png');
         this.game.load.image('framedpicture', 'assets/scaled/ship.png');
         this.game.load.image('foreground', 'assets/scaled/foreground.png');
         this.game.load.image('grl', 'assets/scaled/grl.png');
@@ -89,6 +90,8 @@ var SimpleGame = /** @class */ (function () {
         this.fxkaffeefliegt = this.game.add.audio('sound_kaffeefliegt');
         this.fxkaffeeneu = this.game.add.audio('sound_kaffeeneu');
         this.fxstory = this.game.add.audio('sound_story');
+        this.gametime = this.game.time.create(false);
+        this.gametime.start();
         this.tag = this.game.add.sprite(0, 0, 'tag');
         this.tag.z = 5;
         this.tag.visible = false;
@@ -128,7 +131,14 @@ var SimpleGame = /** @class */ (function () {
             _this.toggle_fullscreen();
         });
         fullscreen_button.anchor.setTo(1, 0);
-        fullscreen_button.scale = new Phaser.Point(0.5, 0.5);
+        fullscreen_button.scale.set(0.5);
+        // Pause
+        var pause_button = this.game.add.button(this.game.world.width - 5 * m, 15 * m, 'pause', function () {
+            console.log("Pause pressed");
+            _this.pause();
+        });
+        pause_button.anchor.setTo(1, 0);
+        pause_button.scale.set(0.5);
         this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
         this.game.scale.setUserScale(0.5, 0.5);
         //this.time = this.game.add.text(3, 3, "");
@@ -150,7 +160,7 @@ var SimpleGame = /** @class */ (function () {
     };
     SimpleGame.prototype.update = function () {
         if (!this.gameover) {
-            var hours = (this.game.time.totalElapsedSeconds() / 1) + 5;
+            var hours = (this.gametime.ms / 1000) + 5;
             var minutes = Math.floor((hours % 1) * 60);
             this.day = Math.floor((hours - 8) / 24) + 1;
             hours = Math.floor(hours % 24);
@@ -248,6 +258,9 @@ var SimpleGame = /** @class */ (function () {
         else {
             this.game.scale.startFullScreen(false);
         }
+    };
+    SimpleGame.prototype.pause = function () {
+        this.game.paused = !this.game.paused;
     };
     return SimpleGame;
 }());
