@@ -113,7 +113,7 @@ class SimpleGame {
         this.kaffeebewegung.chain(this.kaffeestellen);
         this.kaffeestellen.chain(this.bildWirdgehaengt3);
         this.grlCarryKaffee.start();
-        this.kaffeestellen.start();
+        //this.kaffeestellen.start();
         this.kaffeebewegung.start();
 
         //after. position bild on correct position
@@ -154,7 +154,11 @@ class SimpleGame {
 
 
 
-
+        this.kaffee = this.game.add.sprite(90*m, 100*m, 'kaffee');
+        this.kaffee.anchor = new Phaser.Point(1, 1);
+        this.kaffee.scale = new Phaser.Point(1, 1);
+        this.kaffee.visible = false;
+        this.kaffee.inputEnabled = true;
 
 
         this.grl = this.game.add.sprite(100*m, 122*m, 'grl');
@@ -171,10 +175,6 @@ class SimpleGame {
         this.picturedowntween.chain(this.pictureerasetween);
         this.picture.visible = false;
 
-        this.kaffee = this.game.add.sprite(90*m, 100*m, 'kaffee');
-        this.kaffee.anchor = new Phaser.Point(1, 1);
-        this.kaffee.scale = new Phaser.Point(1, 1);
-        this.kaffee.visible = false;
 
 
 
@@ -220,7 +220,7 @@ class SimpleGame {
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215*m }, 2000, Phaser.Easing.Sinusoidal.InOut);
         this.grlCarryKaffee = this.game.add.tween(this.grl).to({ x: 65*m }, 1500, Phaser.Easing.Quadratic.InOut);
         this.kaffeebewegung = this.game.add.tween(this.kaffee).to({ x: 65*m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
-        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45*m, y: 93*m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false).from({ x: 65*m });
+        this.kaffeestellen = this.game.add.tween(this.kaffee).to({ x: 45*m, y: 93*m }, 1500, Phaser.Easing.Quadratic.InOut, false, 0, 0, false);
         this.bildWirdgehaengt3 = this.game.add.tween(this.grl).to({ x: 215*m }, 2000, Phaser.Easing.Sinusoidal.InOut);
 
         this.kaffeedowntween = this.game.add.tween(this.kaffee).to({x:200*m, y: 125*m }, 300, Phaser.Easing.Exponential.In);
@@ -273,6 +273,8 @@ class SimpleGame {
             this.fxgutenmorgen.play(morgensounds[this.day % morgensounds.length]);
             this.grl.position = new Phaser.Point(206*m + 10*m, 122*m);
             this.grl.visible = true;
+            this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
+            this.kaffee.input.disableDrag();
             if (this.day == 3)
                 this.checkWinLose();
 
@@ -289,7 +291,7 @@ class SimpleGame {
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
             this.grl.position = new Phaser.Point(206*m + 10*m, 122*m);
             this.grl.visible = false;
-            this.kaffee.inputEnabled = true;
+            
             this.kaffee.input.enableDrag();
             this.kaffee.events.onDragStart.add(this.onKaffeeDragStart, this);
             this.kaffee.events.onDragStop.add(this.onKaffeeDragStop, this);
