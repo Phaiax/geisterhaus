@@ -3,6 +3,7 @@ var m = 5;
 var SimpleGame = /** @class */ (function () {
     function SimpleGame() {
         var _this = this;
+        this.kaffeehasfallen = false;
         this.day = 1;
         this.picHasFallen = false;
         this.knocks = 0;
@@ -204,6 +205,28 @@ var SimpleGame = /** @class */ (function () {
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
             this.grl.position = new Phaser.Point(206 * m + 10 * m, 122 * m);
             this.grl.visible = false;
+            this.kaffee.inputEnabled = true;
+            this.kaffee.input.enableDrag();
+            this.kaffee.events.onDragStart.add(this.onKaffeeDragStart, this);
+            this.kaffee.events.onDragStop.add(this.onKaffeeDragStop, this);
+        }
+    };
+    SimpleGame.prototype.onKaffeeDragStart = function (sprite, pointer) {
+    };
+    SimpleGame.prototype.onKaffeeDragStop = function (sprite, pointer) {
+        var _this = this;
+        var droppedX = pointer.x;
+        if (droppedX > 120 * m) {
+            if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt == true && this.kaffeehasfallen == false) {
+                this.fxkaffeefliegt.play();
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                    _this.kaffeedowntween.start();
+                }, this);
+                this.kaffeehasfallen = true;
+            }
+        }
+        else {
+            this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
         }
     };
     SimpleGame.prototype.checkWinLose = function () {
@@ -232,13 +255,6 @@ var SimpleGame = /** @class */ (function () {
                     _this.picturedowntween.start();
                 }, this);
             }
-        }
-        if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt) {
-            this.fxkaffeefliegt.play();
-            this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
-                _this.kaffeedowntween.start();
-            }, this);
-            this.kaffeehasfallen = true;
         }
     };
     SimpleGame.prototype.toggle_fullscreen = function () {

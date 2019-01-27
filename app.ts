@@ -44,7 +44,7 @@ class SimpleGame {
     ghost: Phaser.Sprite;
     grl: Phaser.Sprite;
     gameover: boolean;
-    kaffeehasfallen: boolean;
+    kaffeehasfallen: boolean = false;
     kaffeeaufgestellt: boolean;
 
     grlCarryBild: Phaser.Tween;
@@ -289,8 +289,37 @@ class SimpleGame {
             this.fxgutenmorgen.play(nachtsounds[this.day % nachtsounds.length]);
             this.grl.position = new Phaser.Point(206*m + 10*m, 122*m);
             this.grl.visible = false;
+            this.kaffee.inputEnabled = true;
+            this.kaffee.input.enableDrag();
+            this.kaffee.events.onDragStart.add(this.onKaffeeDragStart, this);
+            this.kaffee.events.onDragStop.add(this.onKaffeeDragStop, this);
         }
     }
+    onKaffeeDragStart(sprite, pointer) {
+    
+    }
+    onKaffeeDragStop(sprite, pointer) {
+    
+        var droppedX = pointer.x;
+    
+        if (droppedX > 120*m)
+        {
+            if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt == true && this.kaffeehasfallen == false) {
+                this.fxkaffeefliegt.play();
+                this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
+                    this.kaffeedowntween.start();
+                }, this);
+    
+                this.kaffeehasfallen = true;
+            } 
+        }
+        else
+        {
+            this.kaffee.position = new Phaser.Point(45 * m, 93 * m);
+        }
+    
+    }
+
 
     checkWinLose() {
         if (this.picHasFallen == true && this.kaffeehasfallen == true) {
@@ -325,14 +354,7 @@ class SimpleGame {
                 }, this);
             }
         }
-        if (!this.isDay && this.day >= 1 && this.kaffeeaufgestellt) {
-            this.fxkaffeefliegt.play();
-            this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
-                this.kaffeedowntween.start();
-            }, this);
-
-            this.kaffeehasfallen = true;
-        }    
+   
     }
 
     toggle_fullscreen() {
